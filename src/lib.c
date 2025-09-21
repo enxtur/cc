@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<wchar.h>
+#include<locale.h>
 
 #define BUFFER_SIZE 1024
 #define END_OF_LINE '\n'
@@ -73,6 +75,30 @@ int countWords(char *file) {
   }
 
   if (inWord) {
+    count++;
+  }
+
+  fclose(fptr);
+
+  return count;
+}
+
+int countMultibyteCharacters(char *file) {
+  if (setlocale(LC_CTYPE, "") == NULL) {
+    printf("Error setting locale\n");
+    exit(1);
+  }
+
+  FILE *fptr = fopen(file, "r");
+  wint_t wc;
+  int count = 0;
+
+  if (fptr == NULL) {
+    printf("error: unable to open file!\n");
+    exit(1);
+  }
+
+  while ((wc = fgetwc(fptr)) != WEOF) {
     count++;
   }
 
