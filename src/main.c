@@ -9,34 +9,20 @@ int main(int argc, char *argv[]) {
 
   for (int i = 0; i < argc; i++) {
     if (strcmp(argv[i], "-c") == 0) {
-      if (argc <= (i + 1)) {
-        printf("provide file!\n");
-        exit(1);
-      }
       mode = 1;
-      file = argv[i + 1];
     } else if (strcmp(argv[i], "-l") == 0) {
-      if (argc <= (i + 1)) {
-        printf("provide file!\n");
-        exit(1);
-      }
       mode = 2;
-      file = argv[i + 1];
     } else if (strcmp(argv[i], "-w") == 0) {
-      if (argc <= (i + 1)) {
-        printf("provide file!\n");
-        exit(1);
-      }
       mode = 3;
-      file = argv[i + 1];
     } else if (strcmp(argv[i], "-m") == 0) {
-      if (argc <= (i + 1)) {
-        printf("provide file!\n");
-        exit(1);
-      }
       mode = 4;
-      file = argv[i + 1];
+    } else {
+      file = argv[i];
     }
+  }
+
+  if (file == NULL) {
+    printf("provide file!\n");
   }
 
   switch (mode) {
@@ -53,7 +39,8 @@ int main(int argc, char *argv[]) {
       printf("%d %s\n", countMultibyteCharacters(file), file);
       break;
     default:
-      printf("unrecognized mode");
+      struct Count count = countAll(file);
+      printf("%d %d %d %s\n", count.bytes, count.lines, count.words, file);
       break;
   }
 

@@ -3,6 +3,7 @@
 #include<string.h>
 #include<wchar.h>
 #include<locale.h>
+#include"lib.h"
 
 #define BUFFER_SIZE 1024
 #define END_OF_LINE '\n'
@@ -61,7 +62,7 @@ int countWords(char *file) {
   }
 
   int count = 0;
-  int inWord = 0;  // Track if we're currently inside a word
+  int inWord = 0;
 
   while((ch = fgetc(fptr)) != EOF) {
     if (ch == SPACE || ch == END_OF_LINE || ch == TAB) {
@@ -100,6 +101,44 @@ int countMultibyteCharacters(char *file) {
 
   while ((wc = fgetwc(fptr)) != WEOF) {
     count++;
+  }
+
+  fclose(fptr);
+
+  return count;
+}
+
+struct Count countAll(char *file) {
+  FILE *fptr = fopen(file, "r");
+  char ch;
+
+  if (fptr == NULL) {
+    printf("error: unable to open file!\n");
+    exit(1);
+  }
+
+  struct Count count = {0, 0, 0};
+
+  int inWord = 0;
+
+  while((ch = fgetc(fptr)) != EOF) {
+    count.bytes++;
+    if (ch == SPACE || ch == END_OF_LINE || ch == TAB) {
+      if (inWord) {
+        count.words++;
+        inWord = 0;
+      }
+
+      if (ch == END_OF_LINE) {
+        count.lines++;
+      }
+    } else {
+      inWord = 1;
+    }
+  }
+
+  if (inWord) {
+    count.words++;
   }
 
   fclose(fptr);
