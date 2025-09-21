@@ -1,0 +1,7 @@
+#ifndef LIB_H
+#define LIB_H
+
+int countBytes(char *file);
+int countLines(char *file);
+
+#endif
