@@ -25,24 +25,39 @@ int main(int argc, char *argv[]) {
     printf("provide file!\n");
   }
 
+  FILE *fptr = fopen(file, "r");
+
+  if (fptr == NULL) {
+    printf("error: unable to open file!\n");
+    exit(1);
+  }
+
+  struct Count c = {0, 0, 0, 0};
+  char ch;
+
+  while((ch = fgetc(fptr)) != EOF) {
+    count(ch, &c);
+  }
+
   switch (mode) {
     case 1:
-      printf("%d %s\n", countBytes(file), file);
+      printf("%d %s\n", c.bytes, file);
       break;
     case 2:
-      printf("%d %s\n", countLines(file), file);
+      printf("%d %s\n", c.lines, file);
       break;
     case 3:
-      printf("%d %s\n", countWords(file), file);
+      printf("%d %s\n", c.words, file);
       break;
     case 4:
       printf("%d %s\n", countMultibyteCharacters(file), file);
       break;
     default:
-      struct Count count = countAll(file);
-      printf("%d %d %d %s\n", count.bytes, count.lines, count.words, file);
+      printf("%d %d %d %s\n", c.bytes, c.lines, c.words, file);
       break;
   }
+
+  fclose(fptr);
 
   return 0;
 }
