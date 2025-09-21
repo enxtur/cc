@@ -22,6 +22,13 @@ int main(int argc, char *argv[]) {
       }
       mode = 2;
       file = argv[i + 1];
+    } else if (strcmp(argv[i], "-w") == 0) {
+      if (argc <= (i + 1)) {
+        printf("provide file!\n");
+        exit(1);
+      }
+      mode = 3;
+      file = argv[i + 1];
     }
   }
 
@@ -31,6 +38,9 @@ int main(int argc, char *argv[]) {
       break;
     case 2:
       printf("%d %s\n", countLines(file), file);
+      break;
+    case 3:
+      printf("%d %s\n", countWords(file), file);
       break;
     default:
       printf("unrecognized mode");
