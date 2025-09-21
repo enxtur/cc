@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:src/%.c=dist/%.o)
-TARGET = dist/main
+TARGET = ccwc
 
 all: $(TARGET)
 
