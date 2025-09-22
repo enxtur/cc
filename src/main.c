@@ -49,37 +49,37 @@ int main(int argc, char *argv[]) {
   switch (mode) {
     case 1:
       if (file == NULL) {
-        printf("%d\n", c.bytes);
+        printf("\t%d\n", c.bytes);
       } else {
-        printf("%d %s\n", c.bytes, file);
+        printf("\t%d\t%s\n", c.bytes, file);
       }
       break;
     case 2:
       if (file == NULL) {
-        printf("%d\n", c.lines);
+        printf("\t%d\n", c.lines);
       } else {
-        printf("%d %s\n", c.lines, file);
+        printf("\t%d\t%s\n", c.lines, file);
       }
       break;
     case 3:
       if (file == NULL) {
-        printf("%d\n", c.words);
+        printf("\t%d\n", c.words);
       } else {
-        printf("%d %s\n", c.words, file);
+        printf("\t%d\t%s\n", c.words, file);
       }
       break;
     case 4:
       if (file == NULL) {
-        printf("%d\n", c.bytes); // For stdin, -m is same as -c
+        printf("\t%d\n", c.bytes); // For stdin, -m is same as -c
       } else {
-        printf("%d %s\n", countMultibyteCharacters(file), file);
+        printf("\t%d\t%s\n", countMultibyteCharacters(file), file);
       }
       break;
     default:
       if (file == NULL) {
-        printf("%d %d %d\n", c.bytes, c.lines, c.words);
+        printf("\t%d\t%d\t%d\n", c.lines, c.words, c.bytes);
       } else {
-        printf("%d %d %d %s\n", c.bytes, c.lines, c.words, file);
+        printf("\t%d\t%d\t%d\t%s\n", c.lines, c.words, c.bytes, file);
       }
       break;
   }
