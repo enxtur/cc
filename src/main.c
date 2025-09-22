@@ -1,13 +1,14 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include <unistd.h>
 #include "lib.h"
 
 int main(int argc, char *argv[]) {
   int mode = 0;
-  char *file;
+  char *file = NULL;
 
-  for (int i = 0; i < argc; i++) {
+  for (int i = 1; i < argc; i++) {
     if (strcmp(argv[i], "-c") == 0) {
       mode = 1;
     } else if (strcmp(argv[i], "-l") == 0) {
@@ -17,47 +18,71 @@ int main(int argc, char *argv[]) {
     } else if (strcmp(argv[i], "-m") == 0) {
       mode = 4;
     } else {
-      file = argv[i];
+      if (argv[i][0] != '-') {
+        file = argv[i];
+      }
     }
-  }
-
-  if (file == NULL) {
-    printf("provide file!\n");
-  }
-
-  FILE *fptr = fopen(file, "r");
-
-  if (fptr == NULL) {
-    printf("error: unable to open file!\n");
-    exit(1);
   }
 
   struct Count c = {0, 0, 0, 0};
   char ch;
+  FILE *fptr = file == NULL ? stdin : fopen(file, "r");
+
+  if (fptr == NULL) {
+    printf("error: unable to open file or pipe\n");
+    exit(1);
+  }
 
   while((ch = fgetc(fptr)) != EOF) {
     count(ch, &c);
   }
+  
+  if (file != NULL) {
+    fclose(fptr);
+  }
+
+  if (c.in_word) {
+    c.words++;
+  }
+  
 
   switch (mode) {
     case 1:
-      printf("%d %s\n", c.bytes, file);
+      if (file == NULL) {
+        printf("\t%d\n", c.bytes);
+      } else {
+        printf("\t%d\t%s\n", c.bytes, file);
+      }
       break;
     case 2:
-      printf("%d %s\n", c.lines, file);
+      if (file == NULL) {
+        printf("\t%d\n", c.lines);
+      } else {
+        printf("\t%d\t%s\n", c.lines, file);
+      }
       break;
     case 3:
-      printf("%d %s\n", c.words, file);
+      if (file == NULL) {
+        printf("\t%d\n", c.words);
+      } else {
+        printf("\t%d\t%s\n", c.words, file);
+      }
       break;
     case 4:
-      printf("%d %s\n", countMultibyteCharacters(file), file);
+      if (file == NULL) {
+        printf("\t%d\n", c.bytes); // For stdin, -m is same as -c
+      } else {
+        printf("\t%d\t%s\n", countMultibyteCharacters(file), file);
+      }
       break;
     default:
-      printf("%d %d %d %s\n", c.bytes, c.lines, c.words, file);
+      if (file == NULL) {
+        printf("\t%d\t%d\t%d\n", c.lines, c.words, c.bytes);
+      } else {
+        printf("\t%d\t%d\t%d\t%s\n", c.lines, c.words, c.bytes, file);
+      }
       break;
   }
-
-  fclose(fptr);
 
   return 0;
 }

@@ -1,11 +1,9 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<string.h>
 #include<wchar.h>
 #include<locale.h>
 #include"lib.h"
 
-#define BUFFER_SIZE 1024
 #define END_OF_LINE '\n'
 #define SPACE ' '
 #define TAB '\t'
