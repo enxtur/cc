@@ -30,27 +30,27 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  struct Count c = {0, 0, 0, 0};
-  char ch;
   FILE *fptr = file == NULL ? stdin : fopen(file, "r");
-
+  
   if (fptr == NULL) {
     printf("error: unable to open file or pipe\n");
     exit(1);
   }
+  
+  struct Count c = {0, 0, 0, 0};
+  char ch;
 
   while((ch = fgetc(fptr)) != EOF) {
     count(ch, &c);
   }
   
-  if (file != NULL) {
-    fclose(fptr);
-  }
-
   if (c.in_word) {
     c.words++;
   }
-  
+
+  if (file != NULL) {
+    fclose(fptr);
+  }
 
   switch (mode) {
     case MODE_BYTES:
