@@ -15,4 +15,7 @@ dist/%.o: src/%.c
 clean:
 	rm -f $(OBJ) $(TARGET)
 
-.PHONY: all clean
+test:
+	./bin/test.sh
+
+.PHONY: all clean test
