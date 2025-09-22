@@ -1,0 +1,2 @@
+This is a sample input file for testing.
+Replace this with actual test data for your challenge.

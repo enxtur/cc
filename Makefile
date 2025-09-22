@@ -1,21 +1,74 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude
-SRC = $(wildcard src/*.c)
-OBJ = $(SRC:src/%.c=dist/%.o)
-TARGET = ccwc
+# John Cricket's Coding Challenges
+# Root Makefile to build and test all challenges
 
-all: $(TARGET)
+CHALLENGES_DIR = challenges
+CHALLENGES = $(filter-out $(CHALLENGES_DIR)/template,$(wildcard $(CHALLENGES_DIR)/*))
 
-$(TARGET): $(OBJ)
-	$(CC) $(OBJ) -o $@
+.PHONY: all clean test $(CHALLENGES)
 
-dist/%.o: src/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+all: $(CHALLENGES)
 
+# Build all challenges
+$(CHALLENGES):
+	@echo "Building $(notdir $@)..."
+	@$(MAKE) -C $@
+
+# Clean all challenges
 clean:
-	rm -f $(OBJ) $(TARGET)
+	@echo "Cleaning all challenges..."
+	@for challenge in $(CHALLENGES); do \
+		if [ -f "$$challenge/Makefile" ]; then \
+			echo "Cleaning $$challenge..."; \
+			$(MAKE) -C $$challenge clean; \
+		fi \
+	done
 
+# Test all challenges
 test:
-	./bin/test.sh
+	@echo "Running tests for all challenges..."
+	@./bin/test.sh
 
-.PHONY: all clean test
+# Build specific challenge
+build-%:
+	@challenge=$(CHALLENGES_DIR)/$*; \
+	if [ -d "$$challenge" ]; then \
+		echo "Building $$challenge..."; \
+		$(MAKE) -C $$challenge; \
+	else \
+		echo "Challenge $* not found in $(CHALLENGES_DIR)/"; \
+		exit 1; \
+	fi
+
+# Clean specific challenge
+clean-%:
+	@challenge=$(CHALLENGES_DIR)/$*; \
+	if [ -d "$$challenge" ]; then \
+		echo "Cleaning $$challenge..."; \
+		$(MAKE) -C $$challenge clean; \
+	else \
+		echo "Challenge $* not found in $(CHALLENGES_DIR)/"; \
+		exit 1; \
+	fi
+
+# Test specific challenge
+test-%:
+	@challenge=$(CHALLENGES_DIR)/$*; \
+	if [ -d "$$challenge" ]; then \
+		echo "Testing $$challenge..."; \
+		$(MAKE) -C $$challenge test; \
+	else \
+		echo "Challenge $* not found in $(CHALLENGES_DIR)/"; \
+		exit 1; \
+	fi
+
+# List all available challenges
+list:
+	@echo "Available challenges:"
+	@for challenge in $(CHALLENGES); do \
+		echo "  - $$(basename $$challenge)"; \
+	done
+
+# Create a new challenge from template
+new-%:
+	@echo "Creating new challenge: $*"
+	@./bin/new-challenge.sh $*
