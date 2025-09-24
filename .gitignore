@@ -2,3 +2,5 @@ dist
 !**/.gitkeep
 test.txt
 challenges/ccwc/ccwc
+challenges/json-parser/json-parser
+.vscode
